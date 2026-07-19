@@ -1,0 +1,13 @@
+[[requests]]
+name = "Query"
+
+method = "GET"
+
+url = "http://localhost:8000/search"
+
+[requests.query]
+q = "test"
+page = "1"
+
+[requests.expect]
+status = 200

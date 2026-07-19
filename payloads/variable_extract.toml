@@ -1,0 +1,7 @@
+[variables]
+host = "localhost"
+port = "8000"
+
+[[requests]]
+
+url = "http://{{host}}:{{port}}/"

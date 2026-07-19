@@ -1,0 +1,25 @@
+[[requests]]
+name = "Login"
+
+method = "POST"
+
+url = "http://localhost:8000/graphql"
+
+[requests.graphql]
+
+query = """
+mutation Login($user: LoginInput!) {
+    login(user:$user)
+}
+"""
+
+[requests.graphql.variables.user]
+
+name = "admin"
+password = "{{password}}"
+enabled = true
+roles = ["admin","dev"]
+
+[requests.graphql.variables]
+
+retry = 3

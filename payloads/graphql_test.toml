@@ -1,0 +1,17 @@
+[[requests]]
+name = "GraphQL"
+
+method = "POST"
+
+url = "http://localhost:8000/graphql"
+
+[requests.graphql]
+
+query = """
+query {
+    hello
+}
+"""
+
+[requests.expect]
+status = 200

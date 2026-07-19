@@ -1,0 +1,19 @@
+[[requests]]
+name = "JSON"
+
+method = "POST"
+
+url = "http://localhost:8000/api/login"
+
+[requests.headers]
+Content-Type = "application/json"
+
+body = """
+{
+    "username":"admin",
+    "password":"password"
+}
+"""
+
+[requests.expect]
+status = 200

@@ -1,0 +1,9 @@
+[[requests]]
+name = "Basic GET"
+
+method = "GET"
+
+url = "http://localhost:8000/"
+
+[requests.expect]
+status = 200

@@ -1,0 +1,21 @@
+[[requests]]
+name = "Login"
+
+method = "POST"
+
+url = "http://localhost:8000/login"
+
+body = """
+username=admin&password=password
+"""
+
+[[requests]]
+name = "Profile"
+
+method = "GET"
+
+url = "http://localhost:8000/profile"
+
+[requests.expect]
+status = 200
+contains = "admin"

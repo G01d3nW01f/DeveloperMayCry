@@ -1,0 +1,12 @@
+[[requests]]
+name = "Cookie"
+
+method = "GET"
+
+url = "http://localhost:8000/profile"
+
+[requests.cookies]
+SESSIONID = "{{session}}"
+
+[requests.expect]
+status = 200

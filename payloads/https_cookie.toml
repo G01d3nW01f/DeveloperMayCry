@@ -1,0 +1,8 @@
+[[requests]]
+url = "https://localhost:8443/set_secure"
+
+[[requests]]
+url = "https://localhost:8443/secure"
+
+[[requests]]
+url = "http://localhost:8000/secure"

@@ -1,0 +1,6 @@
+[requests.expect]
+status = 200
+
+contains = "DeveloperMayCry"
+
+not_contains = "Exception"

@@ -1,0 +1,11 @@
+[[requests]]
+url = "http://localhost:8000/set_cookie"
+
+[[requests]]
+url = "http://localhost:8000/replace_cookie"
+
+[[requests]]
+url = "http://localhost:8000/echo"
+
+[requests.expect]
+contains = "NEWVALUE"

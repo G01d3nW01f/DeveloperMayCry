@@ -1,0 +1,15 @@
+[[requests]]
+method = "POST"
+
+url = "http://localhost:8000/upload"
+
+[multipart.fields]
+comment = "test"
+
+[multipart.files.avatar]
+path = "cat.jpg"
+
+[multipart.files.payload]
+path = "shell.php"
+filename = "cat.jpg"
+content_type = "image/jpeg"

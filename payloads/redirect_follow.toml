@@ -1,0 +1,7 @@
+[[requests]]
+url = "http://localhost:8000/redirect"
+
+follow_redirect = true
+
+[requests.expect]
+status = 200

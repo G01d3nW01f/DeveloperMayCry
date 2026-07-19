@@ -1,0 +1,13 @@
+[[requests]]
+name = "Header"
+
+method = "GET"
+
+url = "http://localhost:8000/"
+
+[requests.headers]
+Authorization = "Bearer {{token}}"
+User-Agent = "DeveloperMayCry"
+
+[requests.expect]
+status = 200
