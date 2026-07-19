@@ -83,14 +83,16 @@ SESSIONID="{{session}}"
 method="POST"
 url="http://localhost:8000/api"
 
-[requests.headers]
-Content-Type="application/json"
-
 body = """
 {
   "username":"admin",
   "password":"password"
 }
+
+[requests.headers]
+Content-Type="application/json"
+
+
 """
 ````
 
