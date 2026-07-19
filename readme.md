@@ -264,3 +264,304 @@ DeveloperMayCry currently supports:
 - Payload validation
 - OpenAPI import
 - Automatic payload generation
+
+## Features
+
+DeveloperMayCry provides a lightweight yet powerful environment for reproducing and validating web application vulnerabilities.
+
+### HTTP Methods
+
+Supports the most commonly used HTTP methods.
+
+- GET
+- POST
+- PUT
+- PATCH
+- DELETE
+
+Each request can be defined independently within a single payload file.
+
+---
+
+### Multiple Requests
+
+A single payload file may contain multiple requests.
+
+Requests are executed sequentially, allowing complex workflows such as:
+
+- Login → Access Profile
+- Authenticate → Upload File
+- Create Resource → Update Resource → Delete Resource
+
+---
+
+### Query Parameters
+
+Query parameters can be defined separately from the URL.
+
+Example:
+
+```toml
+[requests.query]
+page = "1"
+search = "admin"
+sort = "name"
+```
+
+DeveloperMayCry automatically generates the final request URL.
+
+---
+
+### Custom HTTP Headers
+
+Any HTTP header can be added.
+
+Example:
+
+```toml
+[requests.headers]
+Authorization = "Bearer {{token}}"
+User-Agent = "DeveloperMayCry"
+X-Forwarded-For = "127.0.0.1"
+```
+
+This is useful for testing:
+
+- Authentication
+- Reverse proxies
+- WAF bypasses
+- Custom APIs
+
+---
+
+### Cookie Management
+
+Cookies may be specified manually or managed automatically.
+
+Manual cookies:
+
+```toml
+[requests.cookies]
+SESSIONID = "{{session}}"
+```
+
+Automatic cookie handling is performed using an internal cookie jar.
+
+Cookies returned by one request are automatically sent with subsequent requests.
+
+---
+
+### Variable Expansion
+
+Variables can be reused throughout the payload.
+
+Example:
+
+```toml
+[variables]
+host = "localhost"
+port = "8000"
+
+[[requests]]
+url = "http://{{host}}:{{port}}/"
+```
+
+This makes payloads portable and easy to maintain.
+
+---
+
+### Raw Request Bodies
+
+DeveloperMayCry supports arbitrary request bodies.
+
+Example:
+
+```toml
+body = """
+{
+    "username":"admin",
+    "password":"password"
+}
+"""
+```
+
+This can be used for:
+
+- JSON
+- XML
+- SOAP
+- Plain text
+- Custom formats
+
+---
+
+### Multipart/Form-Data
+
+Supports multipart requests with both text fields and file uploads.
+
+Features include:
+
+- Multiple files
+- Multiple form fields
+- Custom filenames
+- Custom MIME types
+
+Example:
+
+```toml
+[multipart.fields]
+username = "admin"
+
+[multipart.files.payload]
+path = "shell.php"
+filename = "image.png"
+content_type = "image/png"
+```
+
+This is useful for file upload testing and validation.
+
+---
+
+### GraphQL Support
+
+Native GraphQL support is built in.
+
+Supported features:
+
+- Queries
+- Mutations
+- Nested variables
+- Arrays
+- Objects
+- Automatic JSON serialization
+
+Example:
+
+```toml
+[requests.graphql]
+
+query = """
+query {
+    hello
+}
+"""
+```
+
+Nested variables are converted into the appropriate JSON structure automatically.
+
+---
+
+### Response Validation
+
+Responses can be validated automatically.
+
+Supported checks:
+
+- HTTP status code
+- Response contains text
+- Response does not contain text
+
+Example:
+
+```toml
+[requests.expect]
+status = 200
+contains = "Welcome"
+not_contains = "Exception"
+```
+
+This makes payloads suitable for regression testing.
+
+---
+
+### Payload Validation
+
+Before executing requests, DeveloperMayCry validates the payload file.
+
+Examples of detected issues include:
+
+- Missing URL
+- Invalid HTTP version
+- Missing request body
+- Missing Content-Type
+- Invalid configuration
+
+Validation helps detect mistakes before sending requests.
+
+---
+
+### Session Persistence
+
+DeveloperMayCry maintains session state automatically.
+
+Examples:
+
+- Login
+- Receive cookies
+- Access authenticated endpoints
+
+No manual cookie extraction is required.
+
+---
+
+### OpenAPI Import
+
+DeveloperMayCry can import OpenAPI 3.x specifications.
+
+Current capabilities include:
+
+- Server URLs
+- Paths
+- HTTP methods
+- Path parameters
+- Query parameters
+- Header parameters
+- Cookie parameters
+
+The importer automatically generates a ready-to-use `payload.toml`.
+
+Example:
+
+```bash
+dmc import petstore.json
+```
+
+---
+
+### Automatic Payload Generation
+
+Imported OpenAPI specifications are converted into executable payload templates.
+
+Example output:
+
+```toml
+[[requests]]
+name = "Get User"
+method = "GET"
+url = "http://localhost:8000/users/{{id}}"
+
+[requests.query]
+page = "{{page}}"
+
+[requests.headers]
+Authorization = "{{Authorization}}"
+
+[requests.cookies]
+SESSIONID = "{{SESSIONID}}"
+```
+
+This significantly reduces the time required to begin testing an API.
+
+---
+
+### Lightweight CLI
+
+DeveloperMayCry is a standalone command-line application written in Rust.
+
+Benefits include:
+
+- Fast startup
+- Low memory usage
+- Cross-platform portability
+- No graphical interface required
+- Easy integration with shell scripts and CI/CD pipelines
