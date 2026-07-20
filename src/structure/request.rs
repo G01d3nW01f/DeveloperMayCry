@@ -224,11 +224,16 @@ fn build_query(
     let mut query = Vec::new();
 
     for (key, value) in &request.query {
-        query.push((key.clone(), expand_variables(value, session)));
+        let expanded = expand_variables(value, session);
+
+        //println!("QUERY {} = {:?}", key, expanded);
+
+        query.push((key.clone(), expanded));
     }
 
-    builder = builder.query(&query);
+    //println!("QUERY VECTOR = {:?}", query);
 
+    builder = builder.query(&query);
     builder
 }
 

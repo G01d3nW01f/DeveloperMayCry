@@ -43,6 +43,9 @@ pub struct Request {
     /// Body
     pub body: Option<String>,
 
+    #[serde(default)]
+    pub variables: HashMap<String, String>,
+
     /// TLS Verify
     #[serde(default = "default_verify_tls")]
     pub verify_tls: bool,

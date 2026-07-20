@@ -8,7 +8,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-/// HTTPレスポンス
+/// HTTP response
 #[derive(Debug)]
 pub struct ResponseData {
     /// HTTP Status
@@ -24,19 +24,17 @@ pub struct ResponseData {
     pub elapsed: Duration,
 }
 
-/// Requestを送信
+// Request sending
 pub async fn execute_request(
     builder: RequestBuilder,
-
     request: &Request,
-
     session: &mut Session,
 ) -> Result<ResponseData, Box<dyn Error>> {
     let start = Instant::now();
 
     let response = builder.send().await?;
 
-    // CookieをSessionへ保存
+    // Cookie store to Session
     session.update_from_response(&response);
 
     let elapsed = start.elapsed();

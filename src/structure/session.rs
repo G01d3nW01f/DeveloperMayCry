@@ -1,6 +1,6 @@
 use crate::structure::definition::{Cookie, CookieJar, Session};
-
 use reqwest::header::SET_COOKIE;
+use std::collections::HashMap;
 
 impl CookieJar {
     pub fn add(&mut self, cookie: Cookie) {
@@ -16,13 +16,15 @@ impl CookieJar {
 }
 
 impl Session {
-    /*pub fn new() -> Self {
-        Self {
-            cookie_jar: CookieJar::default(),
-            variables: HashMap::new(),
-            arrays: HashMap::new(),
+    pub fn clear_request_variables(&mut self) {
+        self.variables.clear();
+    }
+
+    pub fn set_request_variables(&mut self, variables: &HashMap<String, String>) {
+        for (k, v) in variables {
+            self.set_variable(k.clone(), v.clone());
         }
-    }*/
+    }
 
     pub fn set_variable(&mut self, name: impl Into<String>, value: impl Into<String>) {
         self.variables.insert(name.into(), value.into());
@@ -31,15 +33,7 @@ impl Session {
     pub fn get_variable(&self, name: &str) -> Option<&String> {
         self.variables.get(name)
     }
-    /*
-    pub fn set_array(&mut self, name: impl Into<String>, values: Vec<String>) {
-        self.arrays.insert(name.into(), values);
-    }*/
-    /*
-    pub fn get_array(&self, name: &str) -> Option<&Vec<String>> {
-        self.arrays.get(name)
-    }
-    */
+
     pub fn update_from_response(&mut self, response: &reqwest::Response) {
         for value in response.headers().get_all(SET_COOKIE).iter() {
             let Ok(cookie) = value.to_str() else {

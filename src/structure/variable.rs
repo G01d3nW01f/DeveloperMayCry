@@ -10,11 +10,15 @@ use regex::{Captures, Regex};
 /// {{ENV:NAME}}
 /// {{ENV:NAME|default}}
 pub fn expand_variables(input: &str, session: &Session) -> String {
+    //println!("expand_variables(): input = {:?}", input);
+
     let re = Regex::new(r"\{\{([^}|]+)(?:\|([^}]+))?\}\}").expect("invalid variable regex");
 
     re.replace_all(input, |caps: &Captures| {
         let name = &caps[1];
 
+        //println!("lookup variable = {:?}", name);
+        //println!("session value    = {:?}", session.get_variable(name));
         //
         // Environment Variable
         //
@@ -27,6 +31,7 @@ pub fn expand_variables(input: &str, session: &Session) -> String {
         // Session Variable
         //
         else if let Some(value) = session.get_variable(name) {
+            //  println!("FOUND {} = {:?}", name, value);
             return value.clone();
         }
 
@@ -40,6 +45,8 @@ pub fn expand_variables(input: &str, session: &Session) -> String {
         //
         // Not Found
         //
+        //println!("NOT FOUND {}", name);
+
         String::new()
     })
     .into_owned()

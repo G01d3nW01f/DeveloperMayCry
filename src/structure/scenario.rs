@@ -13,8 +13,14 @@ pub async fn execute_request_scenario(
     summary: &mut ExecutionSummary,
 ) -> Result<(), Box<dyn Error>> {
     let client = create_client(request, runtime)?;
+
+    //println!("{:#?}", request.variables);
+    // Request-local variables
+    session.set_request_variables(&request.variables);
+
     let builder = build_request(&client, request, session)?;
 
+    session.clear_request_variables();
     //
     // Dry Run
     //
