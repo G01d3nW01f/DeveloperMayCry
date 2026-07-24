@@ -1,6 +1,6 @@
 use crate::structure::Request;
 
-/// payload.toml の内容を検証する
+/// payload.toml inspect
 pub fn validate_requests(requests: &[Request]) {
     println!("========================================");
     println!("        Payload Validation");
