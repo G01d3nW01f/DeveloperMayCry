@@ -238,12 +238,14 @@ fn build_query(
 }
 
 fn build_body(mut builder: RequestBuilder, request: &Request, session: &Session) -> RequestBuilder {
-    //println!("build_body: {} {}", request.method, request.url());
+    println!(">>> build_body() called");
 
     if let Some(body) = &request.body {
         let expanded = expand_variables(body, session);
 
-        //println!("Expanded body = {:?}", expanded);
+        println!("================ BODY ================");
+        println!("{}", expanded);
+        println!("======================================");
 
         builder = builder.body(expanded);
     } else {

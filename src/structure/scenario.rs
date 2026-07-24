@@ -20,7 +20,7 @@ pub async fn execute_request_scenario(
 
     let builder = build_request(&client, request, session)?;
 
-    session.clear_request_variables();
+    //session.clear_request_variables();
     //
     // Dry Run
     //
@@ -70,6 +70,8 @@ pub async fn execute_request_scenario(
             return Err(err);
         }
     };
+
+    session.clear_request_variables();
 
     let result = validate(request, &response);
 

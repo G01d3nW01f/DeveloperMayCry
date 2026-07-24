@@ -12,11 +12,15 @@ use regex::{Captures, Regex};
 pub fn expand_variables(input: &str, session: &Session) -> String {
     //println!("expand_variables(): input = {:?}", input);
 
+    //DBG
+    //println!("expand_variables input = {}", input);
+
     let re = Regex::new(r"\{\{([^}|]+)(?:\|([^}]+))?\}\}").expect("invalid variable regex");
 
     re.replace_all(input, |caps: &Captures| {
         let name = &caps[1];
 
+        //DBG
         //println!("lookup variable = {:?}", name);
         //println!("session value    = {:?}", session.get_variable(name));
         //

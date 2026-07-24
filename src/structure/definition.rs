@@ -78,6 +78,9 @@ pub struct Request {
 
     #[serde(default)]
     pub graphql: Option<GraphQL>,
+
+    #[serde(default)]
+    pub output: Option<Output>,
 }
 
 /// Validation Rule
@@ -101,6 +104,8 @@ pub struct Extract {
 
     /// JSONPath Extract
     pub json: HashMap<String, String>,
+
+    pub graphql: HashMap<String, String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Default)]
@@ -207,10 +212,17 @@ impl Session {
 
 impl Session {
     pub fn set_array(&mut self, name: impl Into<String>, values: Vec<String>) {
-        self.arrays.insert(name.into(), values);
+        let name = name.into();
+
+        println!("SET ARRAY {} => {} items", name, values.len());
+
+        self.arrays.insert(name, values);
     }
 
     pub fn get_array(&self, name: &str) -> Option<&Vec<String>> {
+        println!("GET ARRAY {}", name);
+        println!("AVAILABLE = {:?}", self.arrays.keys());
+
         self.arrays.get(name)
     }
 }
@@ -249,4 +261,13 @@ pub struct GraphQL {
     pub variables: Option<toml::Value>,
 
     pub operation_name: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Clone, Default)]
+pub struct Output {
+    /// Output directory
+    pub directory: String,
+
+    /// Output filename
+    pub filename: String,
 }

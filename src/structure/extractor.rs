@@ -117,6 +117,16 @@ pub fn extract_json(body: &str, request: &Request, session: &mut Session) {
 
             if let Some(text) = value.as_str() {
                 session.set_variable(variable.clone(), text.to_string());
+            } else if let Some(obj) = value.as_object() {
+                if let Some(name) = obj.get("name").and_then(|v| v.as_str()) {
+                    // extract inspection elements
+                    if name.starts_with("__") {
+                        continue;
+                    }
+                    // end section
+
+                    session.set_variable(variable.clone(), name.to_string());
+                }
             } else {
                 session.set_variable(variable.clone(), value.to_string());
             }
@@ -126,6 +136,21 @@ pub fn extract_json(body: &str, request: &Request, session: &mut Session) {
             for value in values {
                 if let Some(text) = value.as_str() {
                     array.push(text.to_string());
+                } else if let Some(obj) = value.as_object() {
+                    if let (Some(name), Some(kind)) = (
+                        obj.get("name").and_then(|v| v.as_str()),
+                        obj.get("kind").and_then(|v| v.as_str()),
+                    ) {
+                        //
+                        // OBJECTだけ保存
+                        //
+                        if matches!(
+                            kind,
+                            "OBJECT" | "INPUT_OBJECT" | "INTERFACE" | "UNION" | "ENUM"
+                        ) {
+                            array.push(name.to_string());
+                        }
+                    }
                 } else {
                     array.push(value.to_string());
                 }
@@ -133,5 +158,115 @@ pub fn extract_json(body: &str, request: &Request, session: &mut Session) {
             session.set_array(variable.clone(), array);
         }
     }
-    println!("Variables after JSON extract: {:#?}", session.variables);
+    //println!("Variables after JSON extract: {:#?}", session.variables);
+}
+
+pub fn extract_graphql(json: &serde_json::Value, _request: &Request, session: &mut Session) {
+    //DBG
+    //println!("extract_graphql() called");
+
+    let Some(types) = json
+        .pointer("/data/__schema/types")
+        .and_then(|v| v.as_array())
+    else {
+        return;
+    };
+
+    let mut objects = Vec::new();
+
+    for ty in types {
+        let kind = ty.get("kind").and_then(|v| v.as_str());
+
+        let name = ty.get("name").and_then(|v| v.as_str());
+
+        if kind == Some("OBJECT") {
+            if let Some(name) = name {
+                objects.push(name.to_string());
+            }
+        }
+    }
+
+    //DBG
+    if !objects.is_empty() {
+        //println!("GraphQL OBJECTS = {:#?}", objects);
+        session.set_array("graphql.objects", objects);
+    }
+}
+
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
+
+pub fn extract_jwt(body: &str) {
+    //
+    // JSONをパース
+    //
+    let Ok(json) = serde_json::from_str::<Value>(body) else {
+        return;
+    };
+
+    walk_json(&json);
+}
+
+fn walk_json(value: &Value) {
+    match value {
+        Value::Object(map) => {
+            for (_, v) in map {
+                if let Some(s) = v.as_str() {
+                    inspect_jwt(s);
+                }
+
+                walk_json(v);
+            }
+        }
+
+        Value::Array(arr) => {
+            for v in arr {
+                walk_json(v);
+            }
+        }
+
+        _ => {}
+    }
+}
+
+fn inspect_jwt(token: &str) {
+    let parts: Vec<&str> = token.split('.').collect();
+
+    if parts.len() != 3 {
+        return;
+    }
+
+    let Ok(header) = URL_SAFE_NO_PAD.decode(parts[0]) else {
+        return;
+    };
+
+    let Ok(payload) = URL_SAFE_NO_PAD.decode(parts[1]) else {
+        return;
+    };
+
+    println!();
+    println!("========================================");
+    println!("JWT Detected");
+    println!("========================================");
+
+    println!("Header");
+    println!("----------------------------------------");
+
+    if let Ok(text) = String::from_utf8(header) {
+        if let Ok(json) = serde_json::from_str::<Value>(&text) {
+            println!("{}", serde_json::to_string_pretty(&json).unwrap());
+        }
+    }
+
+    println!();
+
+    println!("Payload");
+    println!("----------------------------------------");
+
+    if let Ok(text) = String::from_utf8(payload) {
+        if let Ok(json) = serde_json::from_str::<Value>(&text) {
+            println!("{}", serde_json::to_string_pretty(&json).unwrap());
+        }
+    }
+
+    println!("========================================");
 }
