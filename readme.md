@@ -15,7 +15,6 @@ It allows you to describe one or more HTTP requests in a single `payload.toml` f
 - JSON or arbitrary request bodies
 - Multipart/form-data (fields, multiple files, custom filename, custom content type)
 - GraphQL (Query, Mutation, Variables)
-- Variable expansion (`{{variable}}`)
 - Cookie Jar / Session persistence
 - Response validation (status, contains, not_contains)
 - Payload validation
@@ -41,17 +40,6 @@ dmc import openapi.json
 name="Example"
 method="GET"
 url="http://localhost:8000/"
-```
-
-### Variables
-
-```toml
-[variables]
-host="localhost"
-port="8000"
-
-[[requests]]
-url="http://{{host}}:{{port}}/"
 ```
 
 ### Query
@@ -353,20 +341,6 @@ Cookies returned by one request are automatically sent with subsequent requests.
 
 ---
 
-### Variable Expansion
-
-Variables can be reused throughout the payload.
-
-Example:
-
-```toml
-[variables]
-host = "localhost"
-port = "8000"
-
-[[requests]]
-url = "http://{{host}}:{{port}}/"
-```
 
 This makes payloads portable and easy to maintain.
 
