@@ -9,7 +9,7 @@ pub fn create_client(
     runtime: &RuntimeOptions,
 ) -> Result<Client, Box<dyn Error>> {
     //
-    // Runtime Option
+    // Runtime Optionが優先
     //
     let verify_tls = if runtime.insecure {
         false
@@ -36,7 +36,7 @@ pub fn create_client(
         // Auto (default)
         //
         None | Some("auto") => {
-            // reqwest default ALPN negotiation
+            // reqwestのデフォルト(ALPNネゴシエーション)
         }
 
         //
@@ -54,7 +54,7 @@ pub fn create_client(
         }
 
         //
-        // verify by validator.rs
+        // validator.rsで検出済み
         //
         _ => {}
     }

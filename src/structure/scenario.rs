@@ -71,7 +71,7 @@ pub async fn execute_request_scenario(
         }
     };
 
-    session.clear_request_variables();
+    //session.clear_request_variables();
 
     let result = validate(request, &response);
 

@@ -34,8 +34,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Session / Summary
     //
     let mut session = Session::new();
+    session.set_request_variables(&config.variables);
     let mut summary = ExecutionSummary::default();
-
     //
     // Execute Requests
     //
@@ -43,11 +43,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         //
         // foreach
         //
-        if let Some(array_name) = &request.foreach {
+        if let Some(foreach) = &request.foreach {
+            let array_name = if foreach.starts_with("{{") && foreach.ends_with("}}") {
+                &foreach[2..foreach.len() - 2]
+            } else {
+                foreach.as_str()
+            };
             if let Some(items) = session.get_array(array_name) {
                 let items = items.clone();
 
                 for item in items {
+                    //DBG
+                    //println!("FOREACH item = {:?}", item);
+
                     session.set_variable("item", item);
 
                     execute_request_scenario(request, &runtime, &mut session, &mut summary).await?;

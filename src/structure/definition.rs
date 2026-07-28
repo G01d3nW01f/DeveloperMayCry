@@ -7,6 +7,9 @@ use std::{collections::HashMap, error::Error, str::FromStr};
 /// payload.toml
 #[derive(Debug, Deserialize)]
 pub struct Config {
+    #[serde(default)]
+    pub variables: HashMap<String, String>,
+
     pub requests: Vec<Request>,
 }
 

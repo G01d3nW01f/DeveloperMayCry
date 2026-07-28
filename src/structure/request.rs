@@ -15,7 +15,15 @@ pub fn build_request(
     request: &Request,
     session: &Session,
 ) -> Result<RequestBuilder, Box<dyn Error>> {
-    let mut builder = client.request(request.http_method()?, request.url());
+    // URL / base_url / path variable extract
+    let url = expand_variables(&request.url(), session);
+
+    //DBG
+    println!("RAW URL      = {:?}", request.url());
+    println!("SESSION VARS = {:?}", session.variables);
+    println!("EXPANDED URL = {:?}", url);
+    //
+    let mut builder = client.request(request.http_method()?, url);
 
     builder = build_headers(builder, request, session);
 

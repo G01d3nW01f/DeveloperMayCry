@@ -292,6 +292,5 @@ pub struct Parameter {
 
     #[serde(rename = "in")]
     pub location: String,
-
-    pub required: Option<bool>,
+    //pub required: Option<bool>,
 }

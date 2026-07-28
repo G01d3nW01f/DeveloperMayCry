@@ -36,7 +36,7 @@ pub fn extract_cookies(
         };
 
         //
-        // CookieJar
+        // CookieJarへ保存
         //
         session.cookie_jar.add(Cookie {
             name: cookie_name.to_string(),

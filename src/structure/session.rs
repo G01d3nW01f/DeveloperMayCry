@@ -16,9 +16,9 @@ impl CookieJar {
 }
 
 impl Session {
-    pub fn clear_request_variables(&mut self) {
-        self.variables.clear();
-    }
+    //pub fn clear_request_variables(&mut self) {
+    //    self.variables.clear();
+    //}
 
     pub fn set_request_variables(&mut self, variables: &HashMap<String, String>) {
         for (k, v) in variables {
