@@ -19,3 +19,4 @@ url = "2"
 clap = { version = "4", features = ["derive"] }
 regex = "1"
 jsonpath_lib = "0.3"
+base64 = "0.23.1"
